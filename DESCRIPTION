@@ -1,15 +1,27 @@
 Package: select
-Title: SupErLearner for randomizEd Clinical Trial support
+Title: SuperLearner for randomized Clinical Trial support
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Corrado",
            family = "Lanera",
            role = c("aut", "cre"),
            email = "corrado.lanera@gmail.com")
-Description: Provide the code for the application of a SuperLearner
-             approach in support to Randomized Clinical Trials.
+Description: Provide the code for the application of a
+    SuperLearner approach in support to Randomized Clinical Trials.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
 URL: https://github.com/UBESP-DCTV/select
 BugReports: https://github.com/UBESP-DCTV/select/issues
+Depends: 
+    R (>= 3.1)
+Imports: 
+    magrittr (>= 1.5),
+    tibble (>= 2.0.1)
+Suggests: 
+    covr (>= 3.2.1),
+    spelling (>= 2.0),
+    testthat (>= 2.0.1)
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1

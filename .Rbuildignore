@@ -1,2 +1,9 @@
+^inst/docs$
+^data-raw$
+^codecov\.yml$
+^\.travis\.yml$
+^LICENSE\.md$
+^\.github$
+^README\.Rmd$
 ^select\.Rproj$
 ^\.Rproj\.user$
