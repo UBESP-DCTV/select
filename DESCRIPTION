@@ -1,12 +1,15 @@
 Package: select
-Title: What the Package Does (One Line, Title Case)
+Title: SupErLearner for randomizEd Clinical Trial support
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Corrado",
            family = "Lanera",
            role = c("aut", "cre"),
            email = "corrado.lanera@gmail.com")
-Description: What the package does (one paragraph).
+Description: Provide the code for the application of a SuperLearner
+             approach in support to Randomized Clinical Trials.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/UBESP-DCTV/select
+BugReports: https://github.com/UBESP-DCTV/select/issues
