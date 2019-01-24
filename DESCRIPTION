@@ -1,11 +1,32 @@
 Package: select
 Title: SuperLearner for randomized Clinical Trial support
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Corrado",
-           family = "Lanera",
-           role = c("aut", "cre"),
-           email = "corrado.lanera@gmail.com")
+Authors@R: c(
+        person(
+            given  = "Corrado",
+            family = "Lanera",
+            role   = c("aut", "cre"),
+            email  = "corrado.lanera@gmail.com"
+        ),
+        person(
+            given  = "Ileana",
+            family = "Baldi",
+            role   = c("aut"),
+            email  = "ileana.baldi@unipd.it"
+        ),
+        person(
+            given  = "Paola",
+            family = "Berchialla",
+            role   = c("aut"),
+            email  = "paola.berchialla@unito.it"
+        ),
+        person(
+            given  = "Dario",
+            family = "Gregori",
+            role   = c("aut"),
+            email  = "dario.gregori@unipd.it"
+        )
+    )
 Description: Provide the code for the application of a
     SuperLearner approach in support to Randomized Clinical Trials.
 License: GPL-3
