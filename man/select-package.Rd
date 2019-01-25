@@ -20,5 +20,12 @@ Useful links:
 \author{
 \strong{Maintainer}: Corrado Lanera \email{corrado.lanera@gmail.com}
 
+Authors:
+\itemize{
+  \item Ileana Baldi \email{ileana.baldi@unipd.it}
+  \item Paola Berchialla \email{paola.berchialla@unito.it}
+  \item Dario Gregori \email{dario.gregori@unipd.it}
+}
+
 }
 \keyword{internal}

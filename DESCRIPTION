@@ -36,7 +36,7 @@ Depends:
     R (>= 3.1)
 Imports: 
     magrittr (>= 1.5),
-    tibble (>= 2.0.1)
+    tibble
 Suggests: 
     covr (>= 3.2.1),
     spelling (>= 2.0),
