@@ -256,6 +256,19 @@ prologue <- prologue %>%
         allocation = allocation.x
     )
 
+prologue <- prologue %>%
+    mutate(
+        hypertension_adj = (sbp_0m >= 130) | (dbp_0m >= 80),
+        total_colesterol = small_dense_ldl_0m +
+                           hdl_cholesterol_0m +
+                           (tg_0m/5),
+        dislipidemia_adj =   (total_colesterol >= 200) |
+                           (small_dense_ldl_0m >  130) |
+                           (hdl_cholesterol_0m <   35) |
+                                        (tg_0m >  150)
+    )
+
+
 #' ### save
 
 #+ save, error = TRUE

@@ -42,7 +42,7 @@ sais_data <-  list(sais_1_path, sais_2_path) %>%
         clean_names() %>%
         mutate(
             id = id,
-            treatment = factor(medication_glimepiride_0_sitagliptin_1,
+            allocation = factor(medication_glimepiride_0_sitagliptin_1,
                 levels = c(0, 1),
                 labels = c("glimepiride", "sitagliptin")
             ),
@@ -119,7 +119,7 @@ sais_data[["baseline"]] <- sais_data[["baseline"]] %>%
 
 #+ sais join
 sais <- reduce(sais_data, full_join,
-    by     = c("id", "treatment", "age", "gender"),
+    by     = c("id", "allocation", "age", "gender"),
     suffix = c("__X__baseline", "__X__fup")
 )
 
@@ -127,7 +127,15 @@ sais <- sais %>%
     gather("key", "value", matches("(__X__baseline$)|(__X__fup$)")) %>%
     separate(key, c("key", "time"), sep = "__X__") %>%
     spread("key", "value") %>%
-    mutate(time = as.factor(time))
+    mutate(
+        time = as.factor(time),
+        hypertension_adj = (sbp >= 130) | (dbp >= 80),
+        total_colesterol = ldl + hdl + (triglyceride/5),
+        dislipidemia_adj = (total_colesterol >= 200) |
+                                        (ldl >  130) |
+                                        (hdl <   35) |
+                               (triglyceride >  150)
+    )
 
 glimpse(sais)
 #' ### save

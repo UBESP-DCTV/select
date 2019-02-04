@@ -1,3 +1,6 @@
+* Added `hypertension_adj`, `dislipidemia_adj`, and `total_colesterol`,
+  in both trials to consider the same levels accordingly to the same 
+  cut-off/criteria.
 * SAIS RCT data imported, merged and provided as a tibble
   named `sais`.
 * first exploration analyses for SL on PROLOGUE data in `inst/analyses`.

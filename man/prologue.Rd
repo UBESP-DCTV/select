@@ -4,7 +4,7 @@
 \name{prologue}
 \alias{prologue}
 \title{PROLOGUE RCT data}
-\format{A \link[tibble:tibble-package]{tibble} with 473 rows and 260
+\format{A \link[tibble:tibble-package]{tibble} with 473 rows and 263
 variables.}
 \source{
 \url{
@@ -17,6 +17,17 @@ prologue
 \description{
 A dataset containing the data for the PROLOGUE Randomized Clinical
 Trial (\url{https://www.ncbi.nlm.nih.gov/pubmed/27351380}).
+}
+\details{
+The variabels \code{hypertension_adj}, \code{dislipidemia_adj}, and
+\code{total_colesterol} were computed to be selected in the
+same way as in the SAIS (adjusted) dataset. I.e.
+dislipidemia is defined according to the
+American Heart Associations criteria, while hypertension
+is calculated accordingly to the 2017 American College of
+Cardiology/American Heart Association Hypertension Guideline
+definition. All this values were computed only at the
+baseline.
 }
 \note{
 Patient in the dataset are $463$ but there were one row per
