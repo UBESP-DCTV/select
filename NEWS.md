@@ -1,5 +1,8 @@
+* SAIS RCT data imported, merged and provided as a tibble
+  named `sais`.
+* first exploration analyses for SL on PROLOGUE data in `inst/analyses`.
 * Updaute `prologue` dataset to fix a bug related to a duplicate 
-  baseline characteristics columns
+  baseline characteristics columns.
 
 # select 0.0.1
 
