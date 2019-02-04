@@ -1,3 +1,6 @@
+* Updaute `prologue` dataset to fix a bug related to a duplicate 
+  baseline characteristics columns
+
 # select 0.0.1
 
 * PROLOGUE RCT data imported, merged and provided as a tibble

@@ -237,9 +237,27 @@ message(paste(
 
 glimpse(prologue)
 
+prologue %>%
+    dplyr::select(id, ends_with(".x"), ends_with(".y")) %>%
+    dplyr::mutate(
+        same_sex = sex.x == sex.y,
+        sex = any(!same_sex, na.rm = TRUE),
+        same_age = age.x == age.y,
+        age = any(!same_age, na.rm = TRUE),
+        same_allocation = allocation.x == allocation.y,
+        allocation = any(!same_allocation, na.rm = TRUE)
+    )
+
+prologue <- prologue %>%
+    dplyr::select(-age.y, -sex.y, -allocation.y) %>%
+    dplyr::rename(
+        age = age.x,
+        sex = sex.x,
+        allocation = allocation.x
+    )
 
 #' ### save
 
 #+ save, error = TRUE
-usethis::use_data(prologue)
+usethis::use_data(prologue, overwrite = TRUE)
 

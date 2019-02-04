@@ -1,3 +1,4 @@
+^inst/analyses$
 ^inst/docs$
 ^data-raw$
 ^codecov\.yml$
