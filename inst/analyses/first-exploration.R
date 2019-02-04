@@ -234,8 +234,8 @@ scenario_05 <- scenario_05 %>%
     set.seed(123)
     tic_1 <- Sys.time()
     fit_1 <- CV.SuperLearner(
-        X          = scenario_1[colnames(scenario_1) != "delta_hba1c_1"],
-        Y          = scenario_1[["delta_hba1c_1"]] - 1,
+        X = scenario_1[colnames(scenario_1) != "delta_hba1c_1"],
+        Y = scenario_1[["delta_hba1c_1"]] - 1,
         # id         = "id", # not implemented
 
         family     = binomial(),
@@ -261,8 +261,8 @@ summary(fit_1)
     set.seed(123)
     tic_05 <- Sys.time()
     fit_05 <- CV.SuperLearner(
-        X          =  scenario_05[colnames(scenario_05) != "delta_hba1c_05"],
-        Y          =  scenario_05[["delta_hba1c_05"]] - 1,
+        X = scenario_05[colnames(scenario_05) != "delta_hba1c_05"],
+        Y = scenario_05[["delta_hba1c_05"]] - 1,
         # id         = "id", # not implemented
 
         family     = binomial(),
@@ -284,8 +284,8 @@ summary(fit_1)
     set.seed(123)
     tic_05_10f <- Sys.time()
     fit_05_10f <- CV.SuperLearner(
-        X          =  scenario_05[colnames(scenario_05) != "delta_hba1c_05"],
-        Y          =  scenario_05[["delta_hba1c_05"]] - 1,
+        X = scenario_05[colnames(scenario_05) != "delta_hba1c_05"],
+        Y = scenario_05[["delta_hba1c_05"]] - 1,
         # id         = "id", # not implemented
 
         family     = binomial(),
