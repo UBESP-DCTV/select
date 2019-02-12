@@ -12,7 +12,7 @@
 
 <meta name="author" content="Corrado Lanera" />
 
-<meta name="date" content="2019-01-25" />
+<meta name="date" content="2019-02-12" />
 
 <title>Import RCTs data</title>
 
@@ -110,7 +110,7 @@ code > span.ot { color: #007020; }
 <div class="inner">
 <h1 class="title toc-ignore">Import RCTs data</h1>
 <h3 class="author">Corrado Lanera</h3>
-<h3 class="date">2019-01-25</h3>
+<h3 class="date">2019-02-12</h3>
 </div>
 </header>
 
@@ -120,12 +120,12 @@ code > span.ot { color: #007020; }
   <div class="inner clearfix">
     <section id="main-content">
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; -- Attaching packages -------------------------------------------- tidyverse 1.2.1 --</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; -- Attaching packages -------------------------------------------------------- tidyverse 1.2.1 --</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; v ggplot2 3.1.0     v purrr   0.2.5</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; v tibble  2.0.0     v dplyr   0.7.8</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; v tibble  2.0.1     v dplyr   0.7.8</span></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt; v tidyr   0.8.2     v stringr 1.3.1</span></a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; v readr   1.3.1     v forcats 0.3.0</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; -- Conflicts ----------------------------------------------- tidyverse_conflicts() --</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; -- Conflicts ----------------------------------------------------------- tidyverse_conflicts() --</span></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; x dplyr::filter() masks stats::filter()</span></a>
 <a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt; x dplyr::lag()    masks stats::lag()</span></a>
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">library</span>(readxl)</a>
@@ -1146,13 +1146,129 @@ code > span.ot { color: #007020; }
 <a class="sourceLine" id="cb4-273" data-line-number="273"><span class="co">#&gt; $ ae_outcome_day                              &lt;dttm&gt; NA, NA, 2012-12-3...</span></a>
 <a class="sourceLine" id="cb4-274" data-line-number="274"><span class="co">#&gt; $ ae_effect_relation                          &lt;ord&gt; NA, NA, no correla...</span></a>
 <a class="sourceLine" id="cb4-275" data-line-number="275"><span class="co">#&gt; $ ae_quantity                                 &lt;int&gt; 1, 1, 1, 1, 1, 1, ...</span></a>
-<a class="sourceLine" id="cb4-276" data-line-number="276"><span class="co">#&gt; $ ae_many                                     &lt;lgl&gt; FALSE, FALSE, FALS...</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-276" data-line-number="276"><span class="co">#&gt; $ ae_many                                     &lt;lgl&gt; FALSE, FALSE, FALS...</span></a>
+<a class="sourceLine" id="cb4-277" data-line-number="277"></a>
+<a class="sourceLine" id="cb4-278" data-line-number="278">prologue <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-279" data-line-number="279"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(id, <span class="kw">ends_with</span>(<span class="st">&quot;.x&quot;</span>), <span class="kw">ends_with</span>(<span class="st">&quot;.y&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-280" data-line-number="280"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb4-281" data-line-number="281">        <span class="dt">same_sex =</span> sex.x <span class="op">==</span><span class="st"> </span>sex.y,</a>
+<a class="sourceLine" id="cb4-282" data-line-number="282">        <span class="dt">sex =</span> <span class="kw">any</span>(<span class="op">!</span>same_sex, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb4-283" data-line-number="283">        <span class="dt">same_age =</span> age.x <span class="op">==</span><span class="st"> </span>age.y,</a>
+<a class="sourceLine" id="cb4-284" data-line-number="284">        <span class="dt">age =</span> <span class="kw">any</span>(<span class="op">!</span>same_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb4-285" data-line-number="285">        <span class="dt">same_allocation =</span> allocation.x <span class="op">==</span><span class="st"> </span>allocation.y,</a>
+<a class="sourceLine" id="cb4-286" data-line-number="286">        <span class="dt">allocation =</span> <span class="kw">any</span>(<span class="op">!</span>same_allocation, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-287" data-line-number="287">    )</a>
+<a class="sourceLine" id="cb4-288" data-line-number="288"><span class="co">#&gt; # A tibble: 473 x 13</span></a>
+<a class="sourceLine" id="cb4-289" data-line-number="289"><span class="co">#&gt;    id    age.x sex.x allocation.x allocation.y age.y sex.y same_sex sex  </span></a>
+<a class="sourceLine" id="cb4-290" data-line-number="290"><span class="co">#&gt;    &lt;chr&gt; &lt;int&gt; &lt;fct&gt; &lt;fct&gt;        &lt;fct&gt;        &lt;int&gt; &lt;fct&gt; &lt;lgl&gt;    &lt;lgl&gt;</span></a>
+<a class="sourceLine" id="cb4-291" data-line-number="291"><span class="co">#&gt;  1 PRL-~    57 male  sitagliptin  sitagliptin     57 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-292" data-line-number="292"><span class="co">#&gt;  2 PRL-~    48 male  conventional conventional    48 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-293" data-line-number="293"><span class="co">#&gt;  3 PRL-~    75 fema~ conventional conventional    75 fema~ TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-294" data-line-number="294"><span class="co">#&gt;  4 PRL-~    76 male  conventional conventional    76 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-295" data-line-number="295"><span class="co">#&gt;  5 PRL-~    68 male  sitagliptin  sitagliptin     68 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-296" data-line-number="296"><span class="co">#&gt;  6 PRL-~    51 male  sitagliptin  sitagliptin     51 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-297" data-line-number="297"><span class="co">#&gt;  7 PRL-~    72 male  sitagliptin  sitagliptin     72 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-298" data-line-number="298"><span class="co">#&gt;  8 PRL-~    57 male  sitagliptin  sitagliptin     57 male  TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-299" data-line-number="299"><span class="co">#&gt;  9 PRL-~    69 fema~ conventional conventional    69 fema~ TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-300" data-line-number="300"><span class="co">#&gt; 10 PRL-~    66 fema~ conventional conventional    66 fema~ TRUE     FALSE</span></a>
+<a class="sourceLine" id="cb4-301" data-line-number="301"><span class="co">#&gt; # ... with 463 more rows, and 4 more variables: same_age &lt;lgl&gt;, age &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-302" data-line-number="302"><span class="co">#&gt; #   same_allocation &lt;lgl&gt;, allocation &lt;lgl&gt;</span></a>
+<a class="sourceLine" id="cb4-303" data-line-number="303"></a>
+<a class="sourceLine" id="cb4-304" data-line-number="304">prologue &lt;-<span class="st"> </span>prologue <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-305" data-line-number="305"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>age.y, <span class="op">-</span>sex.y, <span class="op">-</span>allocation.y) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-306" data-line-number="306"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">rename</span>(</a>
+<a class="sourceLine" id="cb4-307" data-line-number="307">        <span class="dt">age =</span> age.x,</a>
+<a class="sourceLine" id="cb4-308" data-line-number="308">        <span class="dt">sex =</span> sex.x,</a>
+<a class="sourceLine" id="cb4-309" data-line-number="309">        <span class="dt">allocation =</span> allocation.x</a>
+<a class="sourceLine" id="cb4-310" data-line-number="310">    )</a>
+<a class="sourceLine" id="cb4-311" data-line-number="311"></a>
+<a class="sourceLine" id="cb4-312" data-line-number="312">prologue &lt;-<span class="st"> </span>prologue <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-313" data-line-number="313"><span class="st">    </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb4-314" data-line-number="314">        <span class="dt">bmi     =</span> body_weight_0m <span class="op">/</span><span class="st"> </span>(height_background <span class="op">/</span><span class="st"> </span><span class="dv">100</span>)<span class="op">^</span><span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb4-315" data-line-number="315">        <span class="dt">ldl_adj =</span> t_cholesterol_0m <span class="op">-</span></a>
+<a class="sourceLine" id="cb4-316" data-line-number="316"><span class="st">                  </span>hdl_cholesterol_0m <span class="op">-</span></a>
+<a class="sourceLine" id="cb4-317" data-line-number="317"><span class="st">                  </span>(tg_0m<span class="op">/</span><span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb4-318" data-line-number="318"></a>
+<a class="sourceLine" id="cb4-319" data-line-number="319">        <span class="dt">hypertension_adj =</span> (sbp_0m <span class="op">&gt;=</span><span class="st"> </span><span class="dv">130</span>) <span class="op">|</span><span class="st"> </span>(dbp_0m <span class="op">&gt;=</span><span class="st"> </span><span class="dv">80</span>),</a>
+<a class="sourceLine" id="cb4-320" data-line-number="320">        <span class="dt">dyslipidemia_adj =</span>   (t_cholesterol_0m <span class="op">&gt;=</span><span class="st"> </span><span class="dv">200</span>) <span class="op">|</span></a>
+<a class="sourceLine" id="cb4-321" data-line-number="321"><span class="st">                                      </span>(ldl_adj <span class="op">&gt;</span><span class="st">  </span><span class="dv">130</span>) <span class="op">|</span></a>
+<a class="sourceLine" id="cb4-322" data-line-number="322"><span class="st">                           </span>(hdl_cholesterol_0m <span class="op">&lt;</span><span class="st">   </span><span class="dv">35</span>) <span class="op">|</span></a>
+<a class="sourceLine" id="cb4-323" data-line-number="323"><span class="st">                                        </span>(tg_0m <span class="op">&gt;=</span><span class="st"> </span><span class="dv">150</span>)</a>
+<a class="sourceLine" id="cb4-324" data-line-number="324">    )</a>
+<a class="sourceLine" id="cb4-325" data-line-number="325"></a>
+<a class="sourceLine" id="cb4-326" data-line-number="326">missing_fup &lt;-<span class="st"> </span><span class="kw">select</span>(prologue, <span class="kw">ends_with</span>(<span class="st">&quot;_24m&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-327" data-line-number="327"><span class="st">        </span><span class="kw">is.na</span>()</a>
+<a class="sourceLine" id="cb4-328" data-line-number="328"></a>
+<a class="sourceLine" id="cb4-329" data-line-number="329">was_analyzed &lt;-<span class="st"> </span><span class="kw">rowSums</span>(missing_fup) <span class="op">!=</span><span class="st"> </span><span class="kw">ncol</span>(missing_fup)</a>
+<a class="sourceLine" id="cb4-330" data-line-number="330"></a>
+<a class="sourceLine" id="cb4-331" data-line-number="331">prologue[[<span class="st">&quot;was_analyzed&quot;</span>]] &lt;-<span class="st"> </span>was_analyzed</a>
+<a class="sourceLine" id="cb4-332" data-line-number="332"></a>
+<a class="sourceLine" id="cb4-333" data-line-number="333">prologue <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(was_analyzed)</a>
+<a class="sourceLine" id="cb4-334" data-line-number="334"><span class="co">#&gt; # A tibble: 393 x 262</span></a>
+<a class="sourceLine" id="cb4-335" data-line-number="335"><span class="co">#&gt;    id    dm_treatment statin   age sex   al_sbp al_hb_a1c_jds al_max_imt</span></a>
+<a class="sourceLine" id="cb4-336" data-line-number="336"><span class="co">#&gt;    &lt;chr&gt; &lt;fct&gt;        &lt;lgl&gt;  &lt;int&gt; &lt;fct&gt;  &lt;int&gt;         &lt;dbl&gt;      &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-337" data-line-number="337"><span class="co">#&gt;  1 PRL-~ non-pharmac~ FALSE     48 male     152           6.1       0.94</span></a>
+<a class="sourceLine" id="cb4-338" data-line-number="338"><span class="co">#&gt;  2 PRL-~ non-pharmac~ TRUE      75 fema~    110           6.2       2.58</span></a>
+<a class="sourceLine" id="cb4-339" data-line-number="339"><span class="co">#&gt;  3 PRL-~ pharmacolog~ TRUE      76 male     106           6.8       0.99</span></a>
+<a class="sourceLine" id="cb4-340" data-line-number="340"><span class="co">#&gt;  4 PRL-~ pharmacolog~ TRUE      51 male     126           7         1   </span></a>
+<a class="sourceLine" id="cb4-341" data-line-number="341"><span class="co">#&gt;  5 PRL-~ pharmacolog~ TRUE      72 male     128           6.9       1.04</span></a>
+<a class="sourceLine" id="cb4-342" data-line-number="342"><span class="co">#&gt;  6 PRL-~ pharmacolog~ TRUE      57 male     148           6.5       0.87</span></a>
+<a class="sourceLine" id="cb4-343" data-line-number="343"><span class="co">#&gt;  7 PRL-~ pharmacolog~ FALSE     60 male     122           7.1       0.9 </span></a>
+<a class="sourceLine" id="cb4-344" data-line-number="344"><span class="co">#&gt;  8 PRL-~ non-pharmac~ TRUE      65 male     140           5.8       0.8 </span></a>
+<a class="sourceLine" id="cb4-345" data-line-number="345"><span class="co">#&gt;  9 PRL-~ pharmacolog~ TRUE      65 fema~    146           5.9       0.7 </span></a>
+<a class="sourceLine" id="cb4-346" data-line-number="346"><span class="co">#&gt; 10 PRL-~ pharmacolog~ TRUE      65 fema~    146           5.9       0.7 </span></a>
+<a class="sourceLine" id="cb4-347" data-line-number="347"><span class="co">#&gt; # ... with 383 more rows, and 254 more variables: allocation &lt;fct&gt;,</span></a>
+<a class="sourceLine" id="cb4-348" data-line-number="348"><span class="co">#&gt; #   x0m_right_cca_mean_imt &lt;dbl&gt;, x12m_right_cca_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-349" data-line-number="349"><span class="co">#&gt; #   x24m_right_cca_mean_imt &lt;dbl&gt;, x0m_right_cca_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-350" data-line-number="350"><span class="co">#&gt; #   x12m_right_cca_max_imt &lt;dbl&gt;, x24m_right_cca_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-351" data-line-number="351"><span class="co">#&gt; #   x0m_right_bulb_mean_imt &lt;dbl&gt;, x12m_right_bulb_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-352" data-line-number="352"><span class="co">#&gt; #   x24m_right_bulb_mean_imt &lt;dbl&gt;, x0m_right_bulb_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-353" data-line-number="353"><span class="co">#&gt; #   x12m_right_bulb_max_imt &lt;dbl&gt;, x24m_right_bulb_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-354" data-line-number="354"><span class="co">#&gt; #   x0m_right_ica_mean_imt &lt;dbl&gt;, x12m_right_ica_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-355" data-line-number="355"><span class="co">#&gt; #   x24m_right_ica_mean_imt &lt;dbl&gt;, x0m_right_ica_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-356" data-line-number="356"><span class="co">#&gt; #   x12m_right_ica_max_imt &lt;dbl&gt;, x24m_right_ica_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-357" data-line-number="357"><span class="co">#&gt; #   x0m_left_cca_mean_imt &lt;dbl&gt;, x12m_left_cca_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-358" data-line-number="358"><span class="co">#&gt; #   x24m_left_cca_mean_imt &lt;dbl&gt;, x0m_left_cca_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-359" data-line-number="359"><span class="co">#&gt; #   x12m_left_cca_max_imt &lt;dbl&gt;, x24m_left_cca_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-360" data-line-number="360"><span class="co">#&gt; #   x0m_left_bulb_mean_imt &lt;dbl&gt;, x12m_left_bulb_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-361" data-line-number="361"><span class="co">#&gt; #   x24m_left_bulb_mean_imt &lt;dbl&gt;, x0m_left_bulb_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-362" data-line-number="362"><span class="co">#&gt; #   x12m_left_bulb_max_imt &lt;dbl&gt;, x24m_left_bulb_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-363" data-line-number="363"><span class="co">#&gt; #   x0m_left_ica_mean_imt &lt;dbl&gt;, x12m_left_ica_mean_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-364" data-line-number="364"><span class="co">#&gt; #   x24m_left_ica_mean_imt &lt;dbl&gt;, x0m_left_ica_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-365" data-line-number="365"><span class="co">#&gt; #   x12m_left_ica_max_imt &lt;dbl&gt;, x24m_left_ica_max_imt &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-366" data-line-number="366"><span class="co">#&gt; #   x0m_plaque_area &lt;dbl&gt;, x12m_plaque_area &lt;dbl&gt;, x24m_plaque_area &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-367" data-line-number="367"><span class="co">#&gt; #   x0m_gsm_median &lt;dbl&gt;, x12m_gsm_median &lt;dbl&gt;, x24m_gsm_median &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-368" data-line-number="368"><span class="co">#&gt; #   flag_fas &lt;lgl&gt;, history_hypertension &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-369" data-line-number="369"><span class="co">#&gt; #   history_dyslipidemia &lt;lgl&gt;, history_kidney_disease &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-370" data-line-number="370"><span class="co">#&gt; #   history_liver_disease &lt;lgl&gt;, history_cerebrovascular_disorder &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-371" data-line-number="371"><span class="co">#&gt; #   history_cardiovascular_disorder &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-372" data-line-number="372"><span class="co">#&gt; #   history_cerebral_infarction &lt;lgl&gt;, history_cerebral_hemorrhage &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-373" data-line-number="373"><span class="co">#&gt; #   history_transient_ischemic_attacks &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-374" data-line-number="374"><span class="co">#&gt; #   history_cerebrovascular_disorder_other &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-375" data-line-number="375"><span class="co">#&gt; #   history_cerebrovascular_disorder_other_memo &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb4-376" data-line-number="376"><span class="co">#&gt; #   history_myocardial_infarction &lt;lgl&gt;, history_arrhythmia &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-377" data-line-number="377"><span class="co">#&gt; #   history_cardiac_insufficiency &lt;lgl&gt;, history_pci &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-378" data-line-number="378"><span class="co">#&gt; #   history_cabg &lt;lgl&gt;, history_cardiovascular_disorder_other &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-379" data-line-number="379"><span class="co">#&gt; #   smoke_background &lt;ord&gt;, alcohol_background &lt;lgl&gt;,</span></a>
+<a class="sourceLine" id="cb4-380" data-line-number="380"><span class="co">#&gt; #   height_background &lt;dbl&gt;, patient_condition_0m &lt;fct&gt;,</span></a>
+<a class="sourceLine" id="cb4-381" data-line-number="381"><span class="co">#&gt; #   patient_condition_12m &lt;fct&gt;, patient_condition_24m &lt;fct&gt;,</span></a>
+<a class="sourceLine" id="cb4-382" data-line-number="382"><span class="co">#&gt; #   sitagliptin_per_day_0m &lt;dbl&gt;, sitagliptin_per_day_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-383" data-line-number="383"><span class="co">#&gt; #   sitagliptin_per_day_24m &lt;dbl&gt;, body_weight_0m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-384" data-line-number="384"><span class="co">#&gt; #   body_weight_12m &lt;dbl&gt;, body_weight_24m &lt;dbl&gt;, sbp_0m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-385" data-line-number="385"><span class="co">#&gt; #   sbp_12m &lt;dbl&gt;, sbp_24m &lt;dbl&gt;, dbp_0m &lt;dbl&gt;, dbp_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-386" data-line-number="386"><span class="co">#&gt; #   dbp_24m &lt;dbl&gt;, pulse_rate_0m &lt;dbl&gt;, pulse_rate_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-387" data-line-number="387"><span class="co">#&gt; #   pulse_rate_24m &lt;dbl&gt;, erythrocyte_0m &lt;dbl&gt;, erythrocyte_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-388" data-line-number="388"><span class="co">#&gt; #   erythrocyte_24m &lt;dbl&gt;, leukocyte_0m &lt;dbl&gt;, leukocyte_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-389" data-line-number="389"><span class="co">#&gt; #   leukocyte_24m &lt;dbl&gt;, platelet_0m &lt;dbl&gt;, platelet_12m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-390" data-line-number="390"><span class="co">#&gt; #   platelet_24m &lt;dbl&gt;, hb_0m &lt;dbl&gt;, hb_12m &lt;dbl&gt;, hb_24m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-391" data-line-number="391"><span class="co">#&gt; #   hct_0m &lt;dbl&gt;, hct_12m &lt;dbl&gt;, hct_24m &lt;dbl&gt;, ast_0m &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb4-392" data-line-number="392"><span class="co">#&gt; #   ast_12m &lt;dbl&gt;, ast_24m &lt;dbl&gt;, ...</span></a></code></pre></div>
 </div>
 <div id="save" class="section level3">
 <h3>save</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">use_data</span>(prologue)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">usethis<span class="op">::</span><span class="kw">use_data</span>(prologue, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; &lt;U+2714&gt; Setting active project to 'C:/Users/corra/Documents/select'</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; Error: 'C:/Users/corra/Documents/select/data/prologue.rda' already exist. Use `overwrite = TRUE` to overwrite.</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; &lt;U+2714&gt; Saving 'prologue' to 'data/prologue.rda'</span></a></code></pre></div>
 </div>
 </div>
     </section>

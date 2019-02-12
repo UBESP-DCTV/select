@@ -112,7 +112,7 @@ sais_data[["baseline"]] <- sais_data[["baseline"]] %>%
         current_smoker_yes_1_no_0, hyper_tension_yes_1_no_0,
         dislipidemia_yes_1_no_0, statin_yes_1_no_0,
         metformin_yes_1_no_0, diabetic_nephropathy_yes_1_no_0,
-        uangiotensin_converting_enzyme_inhibitors_angiotensin_ii_receptor_blockers_yes_1_no_0
+        angiotensin_converting_enzyme_inhibitors_angiotensin_ii_receptor_blockers_yes_1_no_0
     ))
 
 #' ### merge
@@ -123,6 +123,8 @@ sais <- reduce(sais_data, full_join,
     suffix = c("__X__baseline", "__X__fup")
 )
 
+
+
 sais <- sais %>%
     gather("key", "value", matches("(__X__baseline$)|(__X__fup$)")) %>%
     separate(key, c("key", "time"), sep = "__X__") %>%
@@ -131,10 +133,10 @@ sais <- sais %>%
         time = as.factor(time),
         hypertension_adj = (sbp >= 130) | (dbp >= 80),
         total_colesterol = ldl + hdl + (triglyceride/5),
-        dislipidemia_adj = (total_colesterol >= 200) |
+        dyslipidemia_adj = (total_colesterol >= 200) |
                                         (ldl >  130) |
                                         (hdl <   35) |
-                               (triglyceride >  150)
+                               (triglyceride >= 150)
     )
 
 glimpse(sais)

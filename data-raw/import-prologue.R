@@ -258,16 +258,26 @@ prologue <- prologue %>%
 
 prologue <- prologue %>%
     mutate(
+        bmi     = body_weight_0m / (height_background / 100)^2,
+        ldl_adj = t_cholesterol_0m -
+                  hdl_cholesterol_0m -
+                  (tg_0m/5),
+
         hypertension_adj = (sbp_0m >= 130) | (dbp_0m >= 80),
-        total_colesterol = small_dense_ldl_0m +
-                           hdl_cholesterol_0m +
-                           (tg_0m/5),
-        dislipidemia_adj =   (total_colesterol >= 200) |
-                           (small_dense_ldl_0m >  130) |
+        dyslipidemia_adj =   (t_cholesterol_0m >= 200) |
+                                      (ldl_adj >  130) |
                            (hdl_cholesterol_0m <   35) |
-                                        (tg_0m >  150)
+                                        (tg_0m >= 150)
     )
 
+missing_fup <- select(prologue, ends_with("_24m")) %>%
+        is.na()
+
+was_analyzed <- rowSums(missing_fup) != ncol(missing_fup)
+
+prologue[["was_analyzed"]] <- was_analyzed
+
+prologue %>% filter(was_analyzed)
 
 #' ### save
 

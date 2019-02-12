@@ -129,7 +129,8 @@ prologue_test <- prologue %>%
 
         delta_hba1c
     ) %>%
-    dplyr::filter(!is.na(delta_hba1c))
+    dplyr::filter(!is.na(delta_hba1c)) %>%
+    set_names(names(sais_train))
 
 datatable(prologue_test)
 
@@ -142,7 +143,6 @@ datatable(prologue_test)
     set.seed(123)
     sais_train_miced <- sais_train %>%
         as.data.frame() %>%
-        mutate_all(as.numeric) %>%
         mice(method = 'rf', visitSequence = 'monotone', seed = 8700) %>%
         mice::complete(5)
 }
@@ -151,7 +151,6 @@ datatable(prologue_test)
     set.seed(123)
     prologue_test_miced <- prologue_test %>%
         as.data.frame() %>%
-        mutate_all(as.numeric) %>%
         mice(method = 'rf', visitSequence = 'monotone', seed = 8700) %>%
         mice::complete(5)
 }
@@ -171,7 +170,8 @@ base_learners <- ls("package:SuperLearner", pattern = "^[S]L") %>%
         'SL.loess', 'SL.leekasso', 'SL.nnet', 'SL.nnls', 'SL.logreg',
         'SL.ridge', 'SL.svm', 'SL.gam', 'SL.glm', 'SL.step',
         'SL.step.forward', 'SL.step.interaction', 'SL.stepAIC',
-        'SL.glm.interaction', "SL.dbarts", "SL.gbm", "SL.qda"
+        'SL.glm.interaction', "SL.dbarts", "SL.gbm", "SL.qda",
+        "SL.lda", "SL.kernelKnn", "SL.extraTrees"
 ))
 
 var_select <- c(
@@ -186,6 +186,7 @@ var_select <- c(
 SL.libraryD <- purrr::map(base_learners, ~ c(., var_select))
 names(SL.libraryD) <- base_learners
 
+training_vars <- names(sais_train)[names(sais_train) != "delta_hba1c"]
 
 #' ## Addestramento
 #'
@@ -196,9 +197,8 @@ names(SL.libraryD) <- base_learners
     set.seed(123)
     tic_train <- Sys.time()
     fit_train <- SuperLearner(
-        X = dplyr::select(sais_train_miced, -delta_hba1c) %>%
-            as.data.frame(),
-        Y = sais_train_miced[["delta_hba1c"]] - 1,
+        X = sais_train_miced[training_vars],
+        Y = as.integer(sais_train_miced[["delta_hba1c"]]) - 1,
 
         family     = binomial(),
         method     = 'method.AUC',#'method.NNLS',#
@@ -225,8 +225,7 @@ fit_train
 
 #+ SL-test-PROLOGUE
 estimated <- predict.SuperLearner(fit_train,
-    newX = dplyr::select(prologue_test_miced, -delta_hba1c) %>%
-        as.data.frame()#,
+    newdata = prologue_test_miced[training_vars]#,
     #
     # X = dplyr::select(sais_train_miced, -delta_hba1c),
     # Y = sais_train_miced[["delta_hba1c"]] - 1
@@ -234,8 +233,34 @@ estimated <- predict.SuperLearner(fit_train,
 
 estimated$pred
 
+message("perchè ha solo 43 righe, che sono quelle del training set??")
+
 prologue_predictediction <- tibble(
-    observed = prologue_test_miced[["delta_hba1c"]] - 1,
+    observed = as.integer(prologue_test_miced[["delta_hba1c"]]) - 1,
     probs    = estimated$pred[, 1]
 )
+
+roc_pred <- ROCR::prediction(
+    predictions = prologue_predictediction[["probs"]],
+    labels = prologue_predictediction[["observed"]]
+)
+
+
+
+ROCR::performance(roc_pred,
+    measure = "tpr", x.measure = "fpr"
+) %>% ROCR::plot()
+
+
+map(seq(from = 0.5, to = 0.9, by = 0.05), ~{
+    data_to_use
+})
+
+
+
+
+prologue %>%
+    dplyr::select(-starts_with("ae_")) %>%
+    dplyr::filter(!history_myocardial_infarction) %>%
+    dplyr::distinct()
 

@@ -12,8 +12,8 @@
 #'       without loosing any information different from ae with the code
 #'       `distinct(select(prologue, -starts_with("ae_")))`.
 #'
-#' @details The variabels `hypertension_adj`, `dislipidemia_adj`, and
-#'          `total_colesterol` were computed to be selected in the
+#' @details The variabels `bmi`, `ldl_adj`, `hypertension_adj`, and
+#'          `dislipidemia_adj` were computed to be selected in the
 #'          same way as in the SAIS (adjusted) dataset. I.e.
 #'          dislipidemia is defined according to the
 #'          American Heart Associations criteria, while hypertension
@@ -22,7 +22,11 @@
 #'          definition. All this values were computed only at the
 #'          baseline.
 #'
-#' @format A [tibble][tibble::tibble-package] with 473 rows and 263
+#'          The variable `was_analyzed` subselect the records (393) for
+#'          the 385 patients finally included in the original
+#'          PROLOGUE study.
+#'
+#' @format A [tibble][tibble::tibble-package] with 473 rows and 262
 #'         variables.
 #' @source \url{
 #'     https://datadryad.org/resource/doi:10.5061/dryad.qt743/2
