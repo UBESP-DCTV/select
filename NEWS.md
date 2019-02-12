@@ -1,3 +1,9 @@
+# select 0.1.1
+
+* Added `was_analyzed` variable to the `prologue` db to identify records
+  of patient analyzed in the original study.
+* Fixed `prologue` definition of ldl and dyslipidemia
+
 # select 0.1.0
 
 * Added `hypertension_adj`, `dislipidemia_adj`, and `total_colesterol`,
