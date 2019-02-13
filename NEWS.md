@@ -1,8 +1,22 @@
+* Updated `inst/analyses/train-sails.R` up to the first train of the
+  SuperLearner on SAIS data.
+* Adedd `train_sl()` and `get_sl_stats()` wrapper functions to train 
+  a SuperLearner and get its stats (time, weak learners risks and
+  weights, plot of the ROC, and AUC and Risk scores)
+* Added `SL.libraryD` data with the SuperLearner configurations.
+* Added `data-raw/setup-sl.R` script to create configuration data for
+  teh training of SuperLearner (accordingly to our decisions).
+* Added `sais_selected` and `prologue_miced_selected` datasets.
+* Merged `data-raw/import-prologue.R` and `data-raw/import-sais.R` in
+  `data-raw/import-data.R` including alsa the code to generate and store
+  selected (variables) and imputed version of the datasets useful for
+  the model. 
+
 # select 0.1.1
 
 * Added `was_analyzed` variable to the `prologue` db to identify records
   of patient analyzed in the original study.
-* Fixed `prologue` definition of ldl and dyslipidemia
+* Fixed `prologue` definition of ldl and dyslipidemia.
 
 # select 0.1.0
 

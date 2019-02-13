@@ -50,174 +50,77 @@ library(tidyverse)
 library(here)
 
 
-#' ## Import and variable selection
+#' ## Caricamento dati
 #'
 #' Importiamo i dati che ci interessano, ovvero quelli per i trial
 #' SAIS (su cui addestreremo il nostromodello SL) e i dati PROLOGUE
 #' (su cui lo testeremo).
+#'
+#' Ricordiamo che useremo solo le variabili comuni a entrambi i trial.
+#' Inoltre ricordimao anche che i dati mancanti di tali variabili per lo
+#' studio PROLOGUE sono stati imputati a partire dal dataset completo.
+#'
 
 #+ data-load
-data("sais")
-data("prologue")
+data("sais_selected", "prologue_miced_selected")
 
-datatable(sais)
-datatable(prologue)
-
-#' Selezioniamo quindi le variabili comuni a entrambi i trial,
-#' che utilizzeremo per le analisi, ovvero;
-#' - Age
-#' - Gender
-#' - BMI
-#' - Hypertension
-#' - Dyslipidemia
-#' - Adiponectin
-#' - SBP
-#' - DBP
-#' - HbA1c al baseline
-#' - FPG
-#' - LDL
-#'
-#' Inoltre calcoliamo e selezioniamo come outcome la differenza tra i
-#' livelli percentuali di HbA1c a 12 mesi e al baseline e consideriamo
-#' come cut-off il livello di delta pari a $-0.5$.
-#'
-#' Inoltre consideriamo solo i dati provenienti dal ramo dei trattati
-#' con sitagliptin.
-
-#+ data-preparation
-sais_train <- sais %>%
-    dplyr::filter(allocation == "sitagliptin") %>%
-    dplyr::group_by(id) %>%
-    dplyr::mutate(
-        delta_hba1c = (diff(hba1c) <= -0.5) %>%
-            factor(
-                levels = c(FALSE, TRUE),
-                labels = c("HbA1c > -0.5", "HbA1c <= -0.5")
-            )
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(time == "baseline") %>%
-    dplyr::select(
-        age, gender, bmi,
-        hypertension_adj, dislipidemia_adj, adiponectin,
-        sbp, dbp,
-        hba1c,
-        fpg, ldl,
-
-        delta_hba1c
-    ) %>%
-    dplyr::filter(!is.na(delta_hba1c))
-
-datatable(sais_train)
-
-prologue_test <- prologue %>%
-    dplyr::mutate(bmi = body_weight_0m / (height_background / 100)^2) %>%
-    # dplyr::filter(allocation == "sitagliptin") %>%
-    dplyr::mutate(
-        delta_hba1c = ((hba1c_ngsp_12m - hba1c_ngsp_0m) <= -0.5) %>%
-            factor(
-                levels = c(FALSE, TRUE),
-                labels = c("HbA1c > -0.5", "HbA1c <= -0.5")
-            )
-    ) %>%
-    dplyr::select(
-        age, sex, bmi,
-        hypertension_adj, dislipidemia_adj, hmw_adiponectin_0m,
-        sbp_0m, dbp_0m,
-        hba1c_ngsp_0m,
-        fbs_0m, small_dense_ldl_0m,
-
-        delta_hba1c
-    ) %>%
-    dplyr::filter(!is.na(delta_hba1c)) %>%
-    set_names(names(sais_train))
-
-datatable(prologue_test)
-
-#' A questo punto imputiamo i dati mancanti eventuali negli studi
-#' considerati e trasformiamo tutto in dati numerici (SL vuole dati
-#' completi e numerici)
-
-#+ data-adjust
-{
-    set.seed(123)
-    sais_train_miced <- sais_train %>%
-        as.data.frame() %>%
-        mice(method = 'rf', visitSequence = 'monotone', seed = 8700) %>%
-        mice::complete(5)
-}
-
-{
-    set.seed(123)
-    prologue_test_miced <- prologue_test %>%
-        as.data.frame() %>%
-        mice(method = 'rf', visitSequence = 'monotone', seed = 8700) %>%
-        mice::complete(5)
-}
-
+datatable(sais_selected)
+datatable(prologue_miced_selected)
 
 #' ## Learners
 #'
-#' Ora definiamo i parametri del SuperLearner che ci interessano, in
-#' particolare i criteri di selezione delle variabili e i week learner
-#' di interesse.
+#' Ora carichiamo i parametri del SuperLearner, ovvero le combinazioni
+#' scelte di criteri di selezione delle variabili e di weak learners.
 
-#+ sl-setup
 #+ SL-setup
-base_learners <- ls("package:SuperLearner", pattern = "^[S]L") %>%
-    setdiff(c(
-        'SL.template', 'SL.bayesglm', 'SL.cforest', 'SL.knn',
-        'SL.loess', 'SL.leekasso', 'SL.nnet', 'SL.nnls', 'SL.logreg',
-        'SL.ridge', 'SL.svm', 'SL.gam', 'SL.glm', 'SL.step',
-        'SL.step.forward', 'SL.step.interaction', 'SL.stepAIC',
-        'SL.glm.interaction', "SL.dbarts", "SL.gbm", "SL.qda",
-        "SL.lda", "SL.kernelKnn", "SL.extraTrees"
-))
+data("SL.libraryD")
+SL.libraryD
 
-var_select <- c(
-        "All",
-        ls("package:SuperLearner", pattern = "screen")
-    ) %>%
-    setdiff(c(
-        'screen.template', 'write.screen.template', 'screen.corP',
-        'screen.corRank', 'screen.glmnet', 'screen.SIS', 'screen.ttest'
-    ))
-
-SL.libraryD <- purrr::map(base_learners, ~ c(., var_select))
-names(SL.libraryD) <- base_learners
-
-training_vars <- names(sais_train)[names(sais_train) != "delta_hba1c"]
 
 #' ## Addestramento
 #'
-#' Addestriamo quinid il primo modello su SAIS
+#' Procediamo quindi all'addestramento.
+#'
+#' Innazitutto isoliamo per la base di dati di addestramento le
+#' informazioni da usare e le informazioni per la risposta.
+
+#+ training-preparation
+training_data <- dplyr::select(sais_selected, -delta_hba1c) %>%
+    as.data.frame() # required by SL
+
+true_values <- (sais_selected[["delta_hba1c"]] == "HbA1c <= -0.5") %>%
+    as.integer() # required by SL
+
+
+#' Addestriamo il modello su SAIS e valutiamone le performance in
+#' termini di AUC.
 
 #+ SL-train-SAIS
-{
-    set.seed(123)
-    tic_train <- Sys.time()
-    fit_train <- SuperLearner(
-        X = sais_train_miced[training_vars],
-        Y = as.integer(sais_train_miced[["delta_hba1c"]]) - 1,
+model_auc <- train_sl(training_data, true_values, method = "method.AUC")
+get_sl_stats(model_auc$sl, true_values)
 
-        family     = binomial(),
-        method     = 'method.AUC',#'method.NNLS',#
-        SL.library = SL.libraryD,
 
-        cvControl  = SuperLearner.CV.control(
-            V          = 5L,
-            shuffle    = TRUE,
-            stratifyCV = TRUE
-        )
-    )
-    toc_train <- Sys.time()
-}
+
+model_nnls <- fit_sl(sais_selected, training_vars, SL.libraryD,
+    method = "method.NNLS"
+)
+message(paste(
+    "tempo impiegato per il train (NNLS):", model_nnls$times
+))
+model_nnls
+
+
+
+
+
+
 
 #' A questo punto sul train il risultato è
 
 #+ train-result
-message(paste("tempo impiegato per il train:", toc_train - tic_train))
-fit_train
+
+
+
 
 #' ## Test
 #'
@@ -226,14 +129,7 @@ fit_train
 #+ SL-test-PROLOGUE
 estimated <- predict.SuperLearner(fit_train,
     newdata = prologue_test_miced[training_vars]#,
-    #
-    # X = dplyr::select(sais_train_miced, -delta_hba1c),
-    # Y = sais_train_miced[["delta_hba1c"]] - 1
 )
-
-estimated$pred
-
-message("perchè ha solo 43 righe, che sono quelle del training set??")
 
 prologue_predictediction <- tibble(
     observed = as.integer(prologue_test_miced[["delta_hba1c"]]) - 1,

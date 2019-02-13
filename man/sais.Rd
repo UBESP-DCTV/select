@@ -28,7 +28,7 @@ dislipidemia is defined according to the
 American Heart Associations criteria, while hypertension
 is calculated accordingly to the 2017 American College of
 Cardiology/American Heart Association Hypertension Guideline
-definition. All this values were computed only at the
+definition., All, this values were computed only at the
 baseline.
 }
 \note{
