@@ -1,3 +1,5 @@
+# select 0.2.0
+
 * Updated `inst/analyses/train-sails.R` up to the first train of the
   SuperLearner on SAIS data.
 * Adedd `train_sl()` and `get_sl_stats()` wrapper functions to train 
