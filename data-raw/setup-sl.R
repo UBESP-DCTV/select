@@ -46,9 +46,9 @@ var_select <- setdiff(
     )
 )
 
-SL.libraryD <- purrr::map(base_learners, ~ c(., var_select))
-names(SL.libraryD) <- base_learners
+sl_library <- purrr::map(base_learners, ~ c(., var_select))
+names(sl_library) <- base_learners
 
 
 
-use_data(SL.libraryD, overwrite = TRUE)
+use_data(sl_library, overwrite = TRUE)

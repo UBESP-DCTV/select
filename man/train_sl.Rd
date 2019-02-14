@@ -4,8 +4,8 @@
 \alias{train_sl}
 \title{wrap for training a SuperLearner}
 \usage{
-train_sl(training_data, true_values, SL.libraryD = SL.libraryD,
-  method = "method.NNLS", seed = 123)
+train_sl(training_data, true_values, SL.libraryD, method = "method.NNLS",
+  seed = 123)
 }
 \arguments{
 \item{training_data}{(data.frame) predictors data}
@@ -31,8 +31,8 @@ wrap for training a SuperLearner
 \examples{
 \dontrun{
     library(select)
-    data("sais_selected", "SL.libraryD")
-    SL.libraryD
+    data("sais_selected", "sl_library")
+    sl_library
 
     fit_sl(
         as.data.frame(sais_selected[-12]),

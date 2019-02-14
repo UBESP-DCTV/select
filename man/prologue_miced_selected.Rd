@@ -4,7 +4,7 @@
 \name{prologue_miced_selected}
 \alias{prologue_miced_selected}
 \title{Selected information from PROLOGUE RCT data}
-\format{A \link[tibble:tibble-package]{tibble} with 385 rows and 12
+\format{A \link[tibble:tibble-package]{tibble} with 385 rows and 15
 variables. (see details)}
 \source{
 \url{

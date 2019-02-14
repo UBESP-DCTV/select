@@ -16,8 +16,8 @@
 #' @examples
 #' \dontrun{
 #'     library(select)
-#'     data("sais_selected", "SL.libraryD")
-#'     SL.libraryD
+#'     data("sais_selected", "sl_library")
+#'     sl_library
 #'
 #'     fit_sl(
 #'         as.data.frame(sais_selected[-12]),
@@ -25,9 +25,9 @@
 #'     )
 #' }
 train_sl <- function(training_data, true_values,
-    SL.libraryD = SL.libraryD,
-    method      = "method.NNLS",
-    seed        = 123
+    SL.libraryD,
+    method  = "method.NNLS",
+    seed    = 123
 ) {
     set.seed(seed)
 

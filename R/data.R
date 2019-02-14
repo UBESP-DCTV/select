@@ -37,7 +37,7 @@
 #'          `sbp`, `dbp`, `hba1c`, `fpg`, `ldl`, and `delta_hba1c`
 #'          (the outcome)
 #'
-#' @format A [tibble][tibble::tibble-package] with 43 rows and 12
+#' @format A [tibble][tibble::tibble-package] with 43 rows and 15
 #'         variables. (see details)
 #' @source \url{https://doi.org/10.1371/journal.pone.0164255.s004} and
 #'         \url{https://doi.org/10.1371/journal.pone.0164255.s005}
@@ -89,6 +89,26 @@
 
 
 
+
+
+
+#' PROLOGUE RCT data
+#'
+#' Imputed version of the \code{\link{prologue}} database.
+#'
+#'
+#' @details Variables representing dates and variables with more than
+#'          400 missing data were removed before the imputation proces.
+#'
+#' @format A [tibble][tibble::tibble-package] with 473 rows and 228
+#'         variables.
+#' @source \url{
+#'     https://datadryad.org/resource/doi:10.5061/dryad.qt743/2
+#' }
+"prologue_miced"
+
+
+
 #' Selected information from PROLOGUE RCT data
 #'
 #' A dataset containing the imputed (for the missing entries)
@@ -107,7 +127,7 @@
 #'         , All, the information in the full \code{\link{prologue}}
 #'          dataset where used.
 #'
-#' @format A [tibble][tibble::tibble-package] with 385 rows and 12
+#' @format A [tibble][tibble::tibble-package] with 385 rows and 15
 #'         variables. (see details)
 #' @source \url{
 #'     https://datadryad.org/resource/doi:10.5061/dryad.qt743/2
@@ -146,4 +166,4 @@
 #'     \item{SL.speedlm     }{SL.speedlm, All, screen.randomForest}
 #'     \item{SL.xgboost     }{SL.xgboost, All, screen.randomForest}
 #' }
-"SL.libraryD"
+"sl_library"

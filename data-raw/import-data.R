@@ -26,11 +26,11 @@ library(mice)
 
 
 
-#' ## PROLOGUE study data
+#' ## SAIS study data
 
 #' ### import
 
-#+ prologue import
+#+ sais-import
 sais_1_path <- here(
     "data-raw",
     "journal.pone.0164255.s004.CSV"
@@ -147,7 +147,7 @@ sais <- sais %>%
 glimpse(sais)
 #' ### save
 
-#+ save, error = TRUE
+#+ save-sais, error = TRUE
 usethis::use_data(sais, overwrite = TRUE)
 
 
@@ -157,7 +157,7 @@ usethis::use_data(sais, overwrite = TRUE)
 
 
 
-# PROLOG ----------------------------------------------------------
+# PROLOGUE --------------------------------------------------------
 
 #' ## PROLOGUE study data
 
@@ -365,7 +365,7 @@ prologue <- reduce(prologue_raw_list, full_join, by = "id") %>%
     group_by(id) %>%
     mutate(
         ae_quantity = n(),
-        ae_many = ae_quantity > 1
+        ae_many     = ae_quantity > 1
     ) %>%
     ungroup()
 message(paste(
@@ -419,7 +419,7 @@ prologue %>% filter(was_analyzed)
 
 #' ### save
 
-#+ save, error = TRUE
+#+ save-prologue, error = TRUE
 usethis::use_data(prologue, overwrite = TRUE)
 
 
@@ -465,7 +465,8 @@ sais_selected <- sais %>%
     dplyr::filter(allocation == "sitagliptin") %>%
     dplyr::group_by(id) %>%
     dplyr::mutate(
-        delta_hba1c = (diff(hba1c) <= -0.5) %>%
+        delta_hba1c_dbl = diff(hba1c),
+        delta_hba1c_fct = (delta_hba1c_dbl <= -0.5) %>%
             factor(
                 levels = c(FALSE, TRUE),
                 labels = c("HbA1c > -0.5", "HbA1c <= -0.5")
@@ -474,17 +475,18 @@ sais_selected <- sais %>%
     dplyr::ungroup() %>%
     dplyr::filter(time == "baseline") %>%
     dplyr::select(
+        id, allocation,
         age, gender, bmi,
         hypertension_adj, dyslipidemia_adj, adiponectin,
         sbp, dbp,
         hba1c,
         fpg, ldl,
 
-        delta_hba1c
+        delta_hba1c_dbl, delta_hba1c_fct
     ) %>%
-    dplyr::filter(!is.na(delta_hba1c))
+    dplyr::filter(!is.na(delta_hba1c_dbl))
 
-use_data(sais_selected, overwrite = TRUE)
+usethis::use_data(sais_selected, overwrite = TRUE)
 
 
 
@@ -503,15 +505,15 @@ use_data(sais_selected, overwrite = TRUE)
 #+ data-adjust
 
 useful_prologue <- prologue[
-        map_lgl(prologue, ~!lubridate::is.POSIXct(.))
+        purrr::map_lgl(prologue, ~!lubridate::is.POSIXct(.))
     ] %>%
     janitor::remove_empty() %>%
     dplyr::select_if(~ {sum(is.na(.)) < 400})
 
 {
     set.seed(123)
-    prologue_miced <-  as.data.frame(useful_prologue) %>%
-        mice(
+    prologue_miced <- as.data.frame(useful_prologue) %>%
+        mice::mice(
             m = 1,
             method = "rf",
             visitSequence = 'monotone',
@@ -523,25 +525,29 @@ useful_prologue <- prologue[
 
 prologue_miced_selected <- prologue_miced %>%
     dplyr::mutate(
-        delta_hba1c = ((hba1c_ngsp_12m - hba1c_ngsp_0m) <= -0.5) %>%
+        delta_hba1c_dbl = hba1c_ngsp_12m - hba1c_ngsp_0m,
+        delta_hba1c_fct = (delta_hba1c_dbl <= -0.5) %>%
             factor(
                 levels = c(FALSE, TRUE),
                 labels = c("HbA1c > -0.5", "HbA1c <= -0.5")
             )
     ) %>%
     dplyr::distinct(id, .keep_all = TRUE) %>%
-    dplyr::filter(was_analyzed, !is.na(delta_hba1c)) %>%
+    dplyr::filter(was_analyzed, !is.na(delta_hba1c_dbl)) %>%
     dplyr::select(
+        id, allocation,
         age, sex, bmi,
         hypertension_adj, dyslipidemia_adj, hmw_adiponectin_0m,
         sbp_0m, dbp_0m,
         hba1c_ngsp_0m,
         fbs_0m, ldl_adj,
 
-        delta_hba1c
+        delta_hba1c_dbl, delta_hba1c_fct
     ) %>%
     set_names(names(sais_selected))
 
-use_data(prologue_miced_selected, overwrite = TRUE)
+usethis::use_data(prologue_miced, prologue_miced_selected,
+    overwrite = TRUE
+)
 
 

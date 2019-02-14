@@ -4,7 +4,7 @@
 \name{sais_selected}
 \alias{sais_selected}
 \title{Selected information from SAIS RCT data}
-\format{A \link[tibble:tibble-package]{tibble} with 43 rows and 12
+\format{A \link[tibble:tibble-package]{tibble} with 43 rows and 15
 variables. (see details)}
 \source{
 \url{https://doi.org/10.1371/journal.pone.0164255.s004} and

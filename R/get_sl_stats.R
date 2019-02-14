@@ -37,7 +37,25 @@ get_sl_stats <- function(sl_model, true_values,
 
     if (show_weights) print(sl_model)
 
-    prediction_obj <- ROCR::prediction(sl_model$SL.predict, true_values)
+    get_auc(sl_model[["SL.predict"]], true_values, plot_roc = plot_roc)
+}
+
+
+#' Get AUC stat
+#'
+#' @param probs (num) vector of probabilities
+#' @param trues (int) vector of true labels (0/1)
+#' @param plot_roc (lgl, default = TRUE), do you want the ROC plot will
+#'        be shown?
+#'
+#' @return AUC value (invisibly)
+#' @export
+#'
+#' @examples
+#' get_auc(runif(100), sample(0:1, 100, replace = TRUE))
+get_auc <- function(probs, trues, plot_roc = TRUE) {
+
+    prediction_obj <- ROCR::prediction(probs, trues)
 
     if (plot_roc) {
         ROCR::performance(prediction_obj, "tpr", "fpr") %>%
@@ -46,14 +64,14 @@ get_sl_stats <- function(sl_model, true_values,
                 colorkey.pos = "top",
                 colorkey.relwidth = 0.25,
 
-                main = "SL ROC"
+                main = "ROC"
             )
     }
 
     sl_auc <- ROCR::performance(prediction_obj, "auc")@y.values[[1]] %>%
         purrr::set_names("AUC")
 
-    message("SL AUC : ", sl_auc)
-    message("SL Risk: ", (1 - sl_auc))
+    message("AUC : ", sl_auc)
+    message("Risk: ", (1 - sl_auc))
     invisible(sl_auc)
 }
