@@ -1,3 +1,9 @@
+* Fixed a bug in `data("prologue")` (wrong variable selected), and 
+  added `data("prologue_miced")` to have access to the full imputed
+  dataset.
+* Added startup warning to check if the package `SuperLearner` is
+  attached.
+
 # select 0.2.0
 
 * Updated `inst/analyses/train-sails.R` up to the first train of the
